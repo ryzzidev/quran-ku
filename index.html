@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>QURAN KU - Baso Asril</title>
+    
+    <!-- Tag PWA & Icon -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" href="https://files.catbox.moe/b6x6lz.png">
+    <link rel="apple-touch-icon" href="https://files.catbox.moe/b6x6lz.png">
+    <meta name="theme-color" content="#000000">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-title">QURAN KU</div>
+            <div class="hero-desc">Platform digital pembacaan Al-Qur'an 30 Juz, Sholat & Wudhu. Dibuat oleh <b>Baso Asril</b>.</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Halaman Beranda / Quran -->
+        <div id="page-quran" class="page active">
+            <div class="app-header">
+                <h1>DAFTAR SURAH</h1>
+                <input type="text" id="search-input" class="search-box" placeholder="Cari surah..." onkeyup="filterSurah()">
+            </div>
+            <div id="surah-list">
+                <p style="text-align: center; color: #9ca3af; grid-column: 1/-1;">Memuat daftar surah...</p>
+            </div>
+        </div>
+
+        <!-- Halaman Detail Surah & Audio Trigger -->
+        <div id="page-detail" class="page">
+            <button class="back-btn" onclick="showPage('page-quran')">← Kembali ke Daftar Surah</button>
+            <h2 id="surah-title" style="margin-bottom: 14px; color: #ffffff; text-align: center;"></h2>
+            
+            <div class="full-audio-trigger" onclick="openMusicModal()">
+                <div class="audio-trigger-left">
+                    <div class="audio-disc-icon" id="discIcon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
+                    </div>
+                    <div class="audio-trigger-info">
+                        <h4 id="trigger-track-title">Putar Full Surah</h4>
+                        <p>Abdullah Bu'ayjaan</p>
+                    </div>
+                </div>
+                <div class="audio-trigger-badge">
+                    <span>Buka Pemutar</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </div>
+            </div>
+
+            <div id="verses-container"></div>
+        </div>
+
+        <!-- Halaman Sholat & Wudhu -->
+        <div id="page-sholat" class="page">
+            <div class="app-header">
+                <h1>SHOLAT & WUDHU</h1>
+            </div>
+
+            <div class="tab-menu">
+                <button class="tab-btn active" onclick="switchSholatWudhu('niat', this)">5 Niat Sholat</button>
+                <button class="tab-btn" onclick="switchSholatWudhu('bacaan', this)">Bacaan Sholat</button>
+                <button class="tab-btn" onclick="switchSholatWudhu('wudhu', this)">Tata Cara Wudhu</button>
+            </div>
+
+            <div id="sholat-wudhu-content"></div>
+        </div>
+
+        <!-- Halaman Cara Baca / Hijaiyah -->
+        <div id="page-guide" class="page">
+            <div class="app-header">
+                <h1>CARA BACA HIJAIYAH (LENGKAP)</h1>
+            </div>
+            <div class="grid-2" id="hijaiyah-list"></div>
+        </div>
+
+        <!-- Halaman Tempat Favorit Permanen -->
+        <div id="page-favorite" class="page">
+            <div class="app-header">
+                <h1>FAVORIT SAYA</h1>
+                <p style="font-size: 0.82rem; color: #9ca3af; margin-top: 4px;">Daftar surah yang tersimpan secara permanen</p>
+            </div>
+            <div id="favorite-list">
+                <p style="text-align: center; color: #9ca3af; grid-column: 1/-1; padding: 20px;">Belum ada surah favorit yang disimpan.</p>
+            </div>
+        </div>
+
+        <!-- Halaman Settings / Fitur Premium -->
+        <div id="page-settings" class="page">
+            <div class="app-header">
+                <h1>PENGATURAN & PREMIUM</h1>
+            </div>
+
+            <div class="settings-card">
+                <h3 style="color:#ffffff; margin-bottom:8px;">💎 Status Akun Premium</h3>
+                <p id="account-status-text" style="font-size:0.9rem; color:#d1d5db; margin-bottom:14px;">Status: Free User (Video Pemandangan Terkunci)</p>
+                
+                <div id="premium-action-area">
+                    <p style="font-size:0.85rem; color:#9ca3af; line-height:1.4; margin-bottom:12px;">
+                        Nikmati fitur video pemandangan latar belakang penuh saat memutar audio Al-Qur'an dengan berlangganan akun Premium. Silakan transfer ke DANA: <b>6285215097779</b>, lalu kirimkan bukti transfer ke email: <b>ryzzinew1@gmail.com</b>.
+                    </p>
+                    <button class="settings-btn" onclick="alert('Silakan transfer ke nomor DANA: 6285215097779 dan kirim bukti transfer ke ryzzinew1@gmail.com')">Beli Premium via DANA</button>
+                </div>
+            </div>
+
+            <div class="settings-card">
+                <h3 style="color:#ffffff; margin-bottom:8px;">🔐 Login Akun Premium</h3>
+                <p style="font-size:0.85rem; color:#d1d5db; margin-bottom:12px;">Masukkan username dan password untuk mengaktifkan akses premium Anda.</p>
+                <input type="text" id="login-user" class="settings-input" placeholder="Username">
+                <input type="password" id="login-pass" class="settings-input" placeholder="Password">
+                <button class="settings-btn" onclick="handleLogin()">Login</button>
+                <button class="settings-btn" style="background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); margin-top: 8px;" onclick="handleLogout()">Logout / Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Mini Player -->
+    <div class="floating-mini-player" id="floatingMiniPlayer">
+        <div class="floating-left" onclick="openMusicModal()">
+            <img src="https://images.unsplash.com/photo-1564769625905-50e93615e769?q=80&w=200&auto=format&fit=crop" class="floating-artwork" id="floatingArtwork" alt="Qari">
+            <div class="floating-info">
+                <div class="floating-title" id="floatingTitle">36. Ya-Sin (يس)</div>
+                <div class="floating-artist" id="floatingArtist">Abdullah Bu'ayjaan</div>
+            </div>
+        </div>
+        <div class="floating-controls">
+            <button class="floating-btn" onclick="togglePlayPause()">
+                <svg id="floatingPlayIcon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            </button>
+            <button class="floating-btn" onclick="skipAudio(10)">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="4" x2="19" y2="20"></line></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal Fullscreen Pemutar Musik & Video Background -->
+    <div class="music-modal" id="musicModal">
+        <video class="music-bg-video" id="bgVideoElement" src="https://files.catbox.moe/jjvycf.mp4" autoplay muted loop playsinline></video>
+        <div class="music-modal-overlay" id="modalOverlayElement"></div>
+
+        <div class="music-modal-top">
+            <div class="modal-grabber" onclick="closeMusicModal()"></div>
+            <div class="weather-badge">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 16.2A4.5 4.5 0 0 0 17.5 8h-1.8A7 7 0 1 0 4 14.9"></path><path d="M16 14v6"></path><path d="M8 14v6"></path><path d="M12 16v6"></path></svg>
+                <span>Qur'an Audio</span>
+            </div>
+
+            <button class="toggle-bg-btn" id="toggleBgBtn" onclick="toggleBackgroundVideo()">
+                <span>Nyalakan Video Pemandangan</span>
+            </button>
+
+            <div class="music-meta-box" style="margin-top: 10px;">
+                <div>
+                    <div class="music-track-title" id="modal-track-title">36. Ya-Sin (يس)</div>
+                    <div class="music-track-artist">Abdullah Bu'ayjaan</div>
+                </div>
+                <button class="fav-btn" id="favBtn" onclick="toggleCurrentFavorite()">★</button>
+            </div>
+
+            <div class="music-progress-wrapper">
+                <div class="music-progress-bar" id="progressBar" onclick="seekAudio(event)">
+                    <div class="music-progress-filled" id="progressFilled"></div>
+                </div>
+                <div class="music-time-info">
+                    <span id="currentTime">00:00</span>
+                    <span id="durationTime">-00:00</span>
+                </div>
+            </div>
+
+            <div class="music-controls">
+                <button class="control-btn" style="font-size: 0.9rem; font-weight: bold;" onclick="togglePlaybackSpeed()">1×</button>
+                <button class="control-btn" onclick="skipAudio(-10)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="19 20 9 12 19 4 19 20"></polygon><line x1="5" y1="4" x2="5" y2="20"></line></svg>
+                </button>
+                <div class="play-pause-circle" id="modalPlayBtn" onclick="togglePlayPause()">
+                    <svg id="playPauseIcon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                </div>
+                <button class="control-btn" onclick="skipAudio(10)">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 4 15 12 5 20 5 4"></polygon><line x1="19" y1="4" x2="19" y2="20"></line></svg>
+                </button>
+                <button class="control-btn" onclick="toggleSleepTimer()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="music-modal-bottom">
+            <button class="bottom-action-btn" onclick="toggleMute()">
+                <svg id="volumeIcon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+            </button>
+            <button class="bottom-action-btn" onclick="closeMusicModal()">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            </button>
+            <button class="bottom-action-btn" onclick="openMusicModal()">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"></path><line x1="2" y1="20" x2="2.01" y2="20"></line></svg>
+            </button>
+            <button class="bottom-action-btn" onclick="closeMusicModal()">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+            </button>
+        </div>
+    </div>
+
+    <audio id="main-audio-player" preload="none"></audio>
+
+    <!-- Navigasi Bawah -->
+    <nav class="bottom-nav" id="bottomNav">
+        <div class="liquid-pill" id="liquidPill"></div>
+        <button class="nav-item active" onclick="switchTab(this, 'page-quran')" data-page="page-quran">
+            <svg class="nav-svg" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <span>Beranda</span>
+        </button>
+        <button class="nav-item" onclick="switchTab(this, 'page-sholat')" data-page="page-sholat">
+            <svg class="nav-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            <span>Sholat</span>
+        </button>
+        <button class="nav-item" onclick="switchTab(this, 'page-guide')" data-page="page-guide">
+            <svg class="nav-svg" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            <span>Cara Baca</span>
+        </button>
+        <button class="nav-item" onclick="switchTab(this, 'page-favorite')" data-page="page-favorite">
+            <svg class="nav-svg" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <span>Favorit</span>
+        </button>
+        <button class="nav-item" onclick="switchTab(this, 'page-settings')" data-page="page-settings">
+            <svg class="nav-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            <span>Settings</span>
+        </button>
+    </nav>
+
+    <script src="script.js"></script>
+</body>
+</html>
